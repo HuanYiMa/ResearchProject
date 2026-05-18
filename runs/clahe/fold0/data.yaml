@@ -1,0 +1,6 @@
+names:
+  0: broccoli
+nc: 1
+path: C:\Users\Huany\PycharmProjects\ResearchProject\runs\clahe\fold0
+train: C:\Users\Huany\PycharmProjects\ResearchProject\runs\clahe\fold0\train.txt
+val: C:\Users\Huany\PycharmProjects\ResearchProject\runs\clahe\fold0\val.txt
