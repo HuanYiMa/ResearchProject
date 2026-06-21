@@ -8,6 +8,11 @@ the only variable that changes between experiments. Each variant is scored both
 on the full dataset and on manually curated subsets representing difficult field
 conditions (camera blur, harsh lighting, leaf occlusion).
 
+This work was carried out as part of the
+[Research Project 2026](https://github.com/TU-Delft-CSE/Research-Project) of the
+Faculty of Electrical Engineering, Mathematics and Computer Science (EEMCS) at
+Delft University of Technology (TU Delft).
+
 ## Data is not included
 
 **The dataset is not committed to this repository.** The field imagery was
