@@ -28,13 +28,21 @@ def run_variant(
     device: int | str = 0,
     workers: int = 4,
     iou: float = 0.5,
+    run_name: str | None = None,
+    hsv_h: float = 0.015,
+    hsv_s: float = 0.7,
+    hsv_v: float = 0.4,
+    scale: float = 0.5,
+    mosaic: float = 1.0,
+    translate: float = 0.1,
 ) -> Path:
     images_dir = build_variant(variant, DATA_ROOT / "raw", DATA_ROOT)
     print(f"[variant={variant}] images dir: {images_dir}")
 
     folds = make_folds(images_dir, n_splits=n_splits, seed=seed)
-    variant_out = RUNS_ROOT / variant
+    variant_out = RUNS_ROOT / variant / run_name if run_name else RUNS_ROOT / variant
     variant_out.mkdir(parents=True, exist_ok=True)
+    print(f"[variant={variant}] output dir: {variant_out}")
 
     metrics_csv = variant_out / "cv_metrics.csv"
     with metrics_csv.open("w", newline="") as fh:
@@ -57,6 +65,12 @@ def run_variant(
                 patience=patience,
                 device=device,
                 workers=workers,
+                hsv_h=hsv_h,
+                hsv_s=hsv_s,
+                hsv_v=hsv_v,
+                scale=scale,
+                mosaic=mosaic,
+                translate=translate,
                 project=str(fold_dir),
                 name="train",
                 exist_ok=True,
@@ -124,6 +138,14 @@ def main() -> None:
     ap.add_argument("--device", default=0, help="CUDA device index, or 'cpu'")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--iou", type=float, default=0.5, help="NMS IoU threshold for val and visualizations")
+    ap.add_argument("--run-name", default=None,
+                    help="Optional subfolder under runs/<variant>/ to keep multiple runs separate")
+    ap.add_argument("--hsv-h", type=float, default=0.015, help="HSV hue augmentation (0 to disable)")
+    ap.add_argument("--hsv-s", type=float, default=0.7, help="HSV saturation augmentation (0 to disable)")
+    ap.add_argument("--hsv-v", type=float, default=0.4, help="HSV value/brightness augmentation (0 to disable)")
+    ap.add_argument("--scale", type=float, default=0.5, help="Random scale gain (0 to disable)")
+    ap.add_argument("--mosaic", type=float, default=1.0, help="Mosaic augmentation probability (0 to disable)")
+    ap.add_argument("--translate", type=float, default=0.1, help="Random translation fraction (0 to disable)")
     args = ap.parse_args()
 
     device: int | str
@@ -144,6 +166,13 @@ def main() -> None:
         device=device,
         workers=args.workers,
         iou=args.iou,
+        run_name=args.run_name,
+        hsv_h=args.hsv_h,
+        hsv_s=args.hsv_s,
+        hsv_v=args.hsv_v,
+        scale=args.scale,
+        mosaic=args.mosaic,
+        translate=args.translate,
     )
 
 
